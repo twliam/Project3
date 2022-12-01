@@ -17,24 +17,38 @@ Each subreddit contains posts that are relevant to its topic. These features mak
 A total of approximately 10000 posts were scraped from r/codingbootcamp and r/csMajors, extracting almost 5000 posts per subreddit. This was done via request from the PushShift API.
 The datasets were then preprocessed for NLP. Several models were then built using a combination of vectorizers (CountVectorizer and TF-IDF) and classifiers (Naive Bayes, Logistic Regression, Random Forest)
 Models were then trained and evaluated for accuracy. ROC AUC was also used as a supplementary metric for evaluation.
-
-
-### Conclusions and Recommendations
-
-Recommendations for agents to identify higher value houses:
-1. Location is important, as always. houses in good neighborhoods sell for more. 
-2. Use built-up size as a gauge rather than total lot size. Having more livable area above ground or a larger garage seems to impact selling price more than just how big the lot area is.
-3. Look out for the overall quality of materials and finishing of a house.  
-
-Recommendations to increase house value before listing:
-1. Improving the overall quality of the house just prior to selling might be feasible, as finishings such as painting, flooring, plastering or minor woodwork can be done on short notice.
-2. Upgrading your kitchen is another viable option.
-3. Some of the stronger factors that impact sale prices (built-up area, garage size) may be costly and time consuming to pursue. May not be worth your while.
-
-### Future Direction
-Track if the use of the insights above help agents not just in fair valuation and increasing value of properties but also in closing their clients as well. In some instances, selling price is not the only target. Closing is as important.
+Logistic Regression with TF-IDF Vectorizer (n-gram range (1,2)) was found to be the best performing model.
 
 ### Data
-Two datasets,`train` and `test`, are obtained from the Ames Assessor's Office and provided for analysis and modelling. Both datasets are a record of sales for residential properties sold in Ames, Iowa from 2006 to 2010.
-* [`train.csv`](./data/train.csv): Contains both features and target
-* [`test.csv`](./data/test.csv): Contains only the features without target
+Two datasets,`codingbootcamp_submissions` and `csmajors_submissions` containing posts from the subreddits r/codingbootcamp and r/csMajors respectively were obtained by scraping popular community aggreggator site Reddit.com using the PushShift API.
+* [`codingbootcamp_submissions.csv`](./data/codingbootcamp_submissions.csv): r/codingbootcamp submissions
+* [`csmajors_submissions.csv`](./data/csmajors_submissions.csv): r/csmajors submissions
+
+## Data Dictionary
+|Feature|Type|Description|
+|:---|---:|---:|
+|subreddit|str|Name of Subreddit post belongs to|
+|title|str|Title of post|
+|created_utc|int|Timestamp of post creation|
+|selftext|str|Content of post|
+|all_text|str|Title and content of post combined|
+|all_text_clean|str|Combined title and content that has been processed|
+
+### Conclusions and Recommendations
+Key Takeaaways:
+1. Logistic Regression using TF-IDF vectorizer and an n-gram range of (1,2) was the best performing model.
+2. The production model is capable of predicting if a post belongs in to an accuracy of 92%, surpassing the 90% goal.
+3. Top keywords relating to coding bootcamps are names of bootcamp providers and programming languages. The focus seems to be more on learning as well, as opposed to job-centric keywords related to the computer science major.
+
+Recommendations to increase house value before listing:
+1. Keyword findings from the exploratory data analysis and interpretation of the production model's coefficients should be used to guide advertising strategy and content.
+2. The produtction model in its current form may be used to identify if a person is a worthwhile advertising target based on his/her online posts.
+3. Names of competitors appear to be useful keywords to identify if searchers are potential bootcamp enrollers.
+
+### Future Direction
+The model in its current form is able to perform relatively well when it comes to predicting if a post should be classified as coming from someone interested in coding bootcamps or a computer science major, and by extension, able to identify said interest based on new posts. More subreddits could be added to increase its versatility in discerning other similar topics as well. 
+
+At present, the model is only trained on data scraped from Reddit and while expected to generalize well across multiple social media platforms, it should be even more so if further trained on data from other sites. More formal texts could also be parsed through the model to identify keywords from a different perspective and for a different marketing angle.
+
+Finally, the model could be deployed on a larger scale, continuously sorting through posts on popular platforms to find potential customers.
+
